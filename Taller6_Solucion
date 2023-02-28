@@ -1,0 +1,286 @@
+package taller06
+
+class Estudiante(
+    val codigo: Int = 1001001001,       // Código del estudiante.
+    val nombre: String = "Juliana",     // Nombre del estudiante.
+    val apellido: String = "Ramírez"    // Apellido del estudiante.
+) {
+    // -----------------------------------------------------------------
+    // Atributos Adicionales
+    // -----------------------------------------------------------------
+    var cursos: List<Curso> = emptyList()
+
+    // -----------------------------------------------------------------
+    // Métodos Contadores
+    // -----------------------------------------------------------------
+
+    /**
+     * Determine cuántos cursos tienen un número de créditos par
+     */
+    fun cursosCodigoPar(): Int {
+        var cont = 0
+        //recorrer lista
+        for (curso in this.cursos) {
+            if (curso.creditos % 2 == 0) {
+                cont++
+            }
+        }
+        return cont
+    }
+
+    /**
+     * Determinar y retornar el número de cursos de pregrado que están
+     * calificados y cuya carrera sea Sistemas o Ciencia
+     */
+    fun ejercicio02(): Int {
+        var cont = 0
+        for (c in this.cursos) {
+            if (c.carrera == "Sistemas" || c.carrera == "Ciencia") {
+                if (!c.dePostgrado) {
+                    if (c.estaCalificado()) {
+                        cont++
+                    }
+                }
+            }
+        }
+        return cont
+    }
+
+
+    /**
+     * Determinar y retornar la cantidad de cursos del estudiante que
+     * pertenecen a la carrera que se recibe como parámetro y tienen
+     * un número de créditos entre 2 y 4.
+     */
+    fun ejercicio03(carrera: String): Int {
+        var cont=0
+        for(i in cursos){
+            if(i.carrera==carrera){
+                if(i.creditos==2 || i.creditos==4){
+                    cont++
+                }
+            }
+        }
+        return 0
+    }
+
+    /**
+     * Determinar y retornar cuántos cursos que están calificados
+     * fueron aprobados por el estudiante
+     */
+    fun ejercicio04(): Int {
+        var cont=0
+        for(i in cursos){
+            if(i.estaCalificado()){
+                if(i.aproboCurso()){
+                    cont++
+                }
+
+            }
+        }
+        return cont
+    }
+
+    /**
+     * Determine y retorne cuantos cursos de pregrado que pertenecen
+     * a la carrera que se pasa como parámetro, están calificados
+     * y tienen una nota por encima de 20, pero por debajo de 40.
+     */
+    fun ejercicio05(carrera: String): Int {
+        var cont=0
+        for(i in cursos){
+            if(i.carrera==carrera){
+                if(i.estaCalificado()){
+                    if(i.darNota() in 20.0..40.0){
+                        cont++
+                    }
+                }
+            }
+        }
+        return cont
+    }
+
+    /**
+     * Halle la suma de los créditos de todos los cursos que tiene
+     * el estudiante
+     */
+    fun ejercicio06(): Int {
+        var cont=0
+        for(i in cursos){
+            cont+=i.creditos
+
+        }
+        return cont
+    }
+
+    /**
+     * Halle la suma de los créditos de aquellos cursos
+     * que están calificados y que pertenecen a la carrera
+     * que se pasa como parámetro y que fueron aprobados
+     */
+    fun ejercicio07(carrera: String): Int {
+        var suma = 0
+        cursos.forEach{
+            if(it.carrera==carrera && it.estaCalificado()&& it.aproboCurso()){
+                suma+=it.creditos
+            }
+        }
+    return suma
+    }
+
+
+    /**
+     * Obtener el promedio normal de las notas de
+     * aquellos cursos que han sido calificados
+     */
+    fun ejercicio08(): Double {
+        var suma= 0.0
+        var cont= 0
+        for (i in cursos){
+            if(i.estaCalificado()){
+                cont++
+                suma+=i.darNota()
+            }
+        }
+        return suma/cont
+    }
+
+    /**
+     * Calcula el promedio ponderado del estudiante de los cursos que tienen
+     * nota asignada. Para hallar el promedio ponderado debe sumarse la
+     * multiplicacion de la nota por los creditos y dividirlo por la suma
+     * de los créditos. Ojo: SOLO LOS QUE TIENEN NOTA
+     */
+    fun ejercicio09(): Double {
+      var suma = 0.0
+      var sumacreditos= 0.0
+
+      for (curso in cursos)
+          if(curso.estaCalificado()){
+              suma+=curso.darNota()*curso.creditos
+              sumacreditos+=curso.creditos
+          }
+        return suma/sumacreditos
+    }
+
+    /**
+     * Determine y retorne el porcentaje de cursos aprobados
+     * del estudiante. Debe ser un número entre 0 y 100
+     */
+    fun ejercicio10(): Double {
+        var cursosaprovados = 0.0
+        var totalcursos = cursos.size
+        var porcenaprobado = 0.0
+        for (i in cursos)
+            if (i.aproboCurso()) {
+                cursosaprovados++
+            }
+        porcenaprobado = (cursosaprovados /totalcursos)*100
+        return porcenaprobado
+    }
+
+    /**
+     * Obtener y retornar el curso que tiene el código que
+     * se pasa como parámetro. Si no existe el código en la
+     * lista, deberá retornarse null
+     */
+    fun ejercicio11(codigo: String): Curso? {
+        for(x in cursos) {
+            if (x.codigo == codigo) {
+                return x
+            }
+        }
+        return null
+    }
+
+    /**
+     * Escriba un método que retorne el código del
+     * primer curso que pertenezca a la carrera que
+     * se recibe como parámetro y que tiene el número
+     * de créditos que se recibe también como parámetro.
+     * Si no existe ese curso, deberá retornarse la
+     * cadena vacía ("")
+     */
+    fun ejercicio12(carrera: String, creditos: Int): String {
+        var x =""
+        for (i in cursos ){
+            if (i.carrera == carrera && i.creditos== creditos){
+                x=i.codigo.toString()
+            }else x
+        }
+        return x
+    }
+}
+
+
+//////////// CLASE CURSO //////////////////////////
+
+package taller06
+
+/**
+ * Curso del estudiante
+ */
+class Curso(
+    var codigo: String,         // Código del curso.
+    var nombre: String,         // Nombre del curso.
+    var carrera: String,        // carrera a la que pertenece el curso
+    var dePostgrado: Boolean,   // true si es un curso de postgrado y false si no
+    var creditos: Int           // Cantidad de créditos del curso
+) {
+    // -----------------------------------------------------------------
+    // Atributos
+    // -----------------------------------------------------------------
+
+    private var nota: Double = 0.0  // Nota del estudiante en el curso
+
+    // -----------------------------------------------------------------
+    // Métodos
+    // -----------------------------------------------------------------
+
+    /**
+     * Asigna a la nota del curso, la nueva nota que se pasa como parámetro.
+     * El cambio de nota solo se debe hacer si la nueva nota está entre 1 y 100
+     */
+    fun asignarNota(nuevaNota: Double) {
+        if (nuevaNota in 1.0..100.0) {
+            nota = nuevaNota
+        }
+    }
+
+    /**
+     * Obtiene la nota del estudiante en el curso
+     */
+    fun darNota() = nota
+
+    /**
+     * Indica si el curso ya ha sido calificado (La nota no es cero)
+     * Retorna true si el curso ya tiene nota, false de lo contrario
+     */
+    fun estaCalificado(): Boolean {
+        return nota in 1.0..100.0
+    }
+
+    /**
+     * Indica si el estudiante aprobó el curso. Tenga en cuenta que si
+     * el curso es de postgrado, se aprueba el cursos si la nota es
+     * superior o igual a 70.0. Si el curso no es postgrado, el curso
+     * se aprueba si la nota es superior o igual a 60.0. En cualquier
+     * otro caso se reprueba el curso.
+     */
+    fun aproboCurso(): Boolean {
+        if (this.dePostgrado == true) {
+            return this.nota >= 70.0
+        } else {
+            return this.nota >= 60.0
+        }
+    }
+
+
+    // Para permitir la impresión del curso
+    override fun toString(): String {
+        return "Curso(codigo='$codigo', nombre='$nombre', carrera='$carrera', dePostgrado=$dePostgrado, creditos=$creditos, nota=$nota)"
+    }
+}
+
+
+
